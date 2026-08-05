@@ -82,7 +82,7 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ### 验证安装
 
-启动 AI 编程助手后描述一个短剧创作需求（如"帮我写一部霸总甜宠短剧"），技能应自动触发；或直接输入 `/start`，如果出现选题引导界面，说明安装成功。
+启动 AI 编程助手后描述一个短剧创作需求（如"帮我写一部霸总甜宠短剧"），技能应自动触发；或直接输入 `/drama-start`，如果出现选题引导界面，说明安装成功。
 
 ---
 
@@ -91,16 +91,16 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 一个典型的短剧创作流程：
 
 ```
-/start          → 选择题材、受众、调性、集数
-/plan      → 生成完整故事骨架
-/characters      → 设计角色档案和关系图
-/outline          → 生成分集目录（含钩子和标记）
-/episode 1        → 撰写第1集剧本
-/review 1        → 对第1集进行质量审查
-/episode 2-5      → 批量撰写第2-5集
-/review all      → 全集质量审查
-/compliance          → 合规审核
-/export          → 导出完整剧本
+/drama-start          → 选择题材、受众、调性、集数
+/drama-plan      → 生成完整故事骨架
+/drama-characters      → 设计角色档案和关系图
+/drama-outline          → 生成分集目录（含钩子和标记）
+/drama-episode 1        → 撰写第1集剧本
+/drama-review 1        → 对第1集进行质量审查
+/drama-episode 2-5      → 批量撰写第2-5集
+/drama-review all      → 全集质量审查
+/drama-compliance          → 合规审核
+/drama-export          → 导出完整剧本
 ```
 
 ### 海外模式
@@ -108,15 +108,15 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 如果目标市场在海外：
 
 ```
-/overseas          → 切换为英文 + 好莱坞格式
-/episode 1        → 按 INT./EXT. 格式撰写
+/drama-overseas          → 切换为英文 + 好莱坞格式
+/drama-episode 1        → 按 INT./EXT. 格式撰写
 ```
 
 ---
 
 ## 命令手册
 
-### `/start` — 选题立项
+### `/drama-start` — 选题立项
 
 启动新项目的创作流程，配置基础参数。
 
@@ -136,11 +136,11 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/plan` — 创作方案
+### `/drama-plan` — 创作方案
 
 生成完整的故事骨架，包含8个核心板块。
 
-**前置条件：** 已执行 `/start`
+**前置条件：** 已执行 `/drama-start`
 
 **输出文件：** `creative-plan.md`
 
@@ -157,11 +157,11 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/characters` — 角色设计
+### `/drama-characters` — 角色设计
 
 创建完整的角色档案体系。
 
-**前置条件：** 已执行 `/plan`
+**前置条件：** 已执行 `/drama-plan`
 
 **输出文件：** `characters.md`
 
@@ -185,11 +185,11 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/outline` — 分集目录
+### `/drama-outline` — 分集目录
 
 生成完整的分集目录表。
 
-**前置条件：** 已执行 `/characters`
+**前置条件：** 已执行 `/drama-characters`
 
 **输出文件：** `episode-directory.md`
 
@@ -212,20 +212,20 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/episode {N}` — 分集撰写
+### `/drama-episode {N}` — 分集撰写
 
 撰写具体集数的剧本。
 
-**前置条件：** 已执行 `/outline`
+**前置条件：** 已执行 `/drama-outline`
 
 **输出文件：** `episodes/ep{NNN}.md`
 
 **参数格式：**
 
 ```
-/episode 1          → 撰写第1集
-/episode 3-5        → 批量撰写第3、4、5集
-/episode next       → 撰写下一集（自动检测进度）
+/drama-episode 1          → 撰写第1集
+/drama-episode 3-5        → 批量撰写第3、4、5集
+/drama-episode next       → 撰写下一集（自动检测进度）
 ```
 
 **剧本格式（国内 domestic 模式）：**
@@ -258,7 +258,7 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/review {N}` — 质量审查
+### `/drama-review {N}` — 质量审查
 
 对已撰写的剧集进行五维度质量评分。
 
@@ -269,16 +269,16 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 **参数格式：**
 
 ```
-/review 1          → 审查第1集
-/review 3-5        → 批量审查第3-5集
-/review all        → 审查所有已写集数
+/drama-review 1          → 审查第1集
+/drama-review 3-5        → 批量审查第3-5集
+/drama-review all        → 审查所有已写集数
 ```
 
 **评分维度：** 见下方[质量评分体系](#质量评分体系)。
 
 ---
 
-### `/export` — 导出剧本
+### `/drama-export` — 导出剧本
 
 将所有创作内容整合为专业排版的完整剧本。
 
@@ -295,7 +295,7 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/overseas` — 海外模式
+### `/drama-overseas` — 海外模式
 
 将创作切换为英文 + 好莱坞标准格式。
 
@@ -317,7 +317,7 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/compliance` — 合规审核
+### `/drama-compliance` — 合规审核
 
 对全剧进行合规审查，检测潜在风险。
 
@@ -395,7 +395,7 @@ your-project/
 
 ## 质量评分体系
 
-`/review` 命令使用五维度评分，每个维度 1-10 分，总分 50 分。
+`/drama-review` 命令使用五维度评分，每个维度 1-10 分，总分 50 分。
 
 ### 评分维度
 
@@ -494,15 +494,15 @@ short-drama-codex/            # 技能包根目录（与 frontmatter 的 name �
 
 | 命令 | 加载的参考文档 |
 |------|----------------|
-| `/start` | genre-guide.md |
-| `/plan` | genre-guide.md, rhythm-curve.md, paywall-design.md, satisfaction-matrix.md |
-| `/characters` | villain-design.md |
-| `/outline` | rhythm-curve.md, hook-design.md, paywall-design.md |
-| `/episode {N}` | opening-rules.md（第1-3集时）, hook-design.md |
-| `/review {N}` | rhythm-curve.md, hook-design.md, satisfaction-matrix.md |
-| `/compliance` | compliance-checklist.md |
-| `/overseas` | — |
-| `/export` | — |
+| `/drama-start` | genre-guide.md |
+| `/drama-plan` | genre-guide.md, rhythm-curve.md, paywall-design.md, satisfaction-matrix.md |
+| `/drama-characters` | villain-design.md |
+| `/drama-outline` | rhythm-curve.md, hook-design.md, paywall-design.md |
+| `/drama-episode {N}` | opening-rules.md（第1-3集时）, hook-design.md |
+| `/drama-review {N}` | rhythm-curve.md, hook-design.md, satisfaction-matrix.md |
+| `/drama-compliance` | compliance-checklist.md |
+| `/drama-overseas` | — |
+| `/drama-export` | — |
 
 ### 兼容性
 
