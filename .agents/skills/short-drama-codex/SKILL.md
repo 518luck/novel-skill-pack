@@ -48,24 +48,24 @@ description: 微短剧剧本全流程创作。当用户想创作短剧/微短剧
 
 创作前必须阅读以下参考文档（位于本 Skill 的 references/ 目录）：
 
-| 文件                    | 用途                       | 加载时机                    |
-| ----------------------- | -------------------------- | --------------------------- |
-| genre-guide.md          | 13种题材定义 + 出海题材    | /drama-start                |
-| opening-rules.md        | 开篇黄金法则 + 6种开场模板 | /drama-plan, /drama-episode |
-| paywall-design.md       | 付费卡点设计策略           | /drama-plan, /drama-outline |
-| rhythm-curve.md         | 节奏曲线 + 单集微结构      | /drama-plan, /drama-episode |
-| satisfaction-matrix.md  | 5大爽点类型矩阵            | /drama-plan, /drama-episode |
-| villain-design.md       | 4层反派体系设计            | /drama-characters           |
-| hook-design.md          | 5种钩子类型                | /drama-episode              |
-| compliance-checklist.md | 合规审核清单               | /drama-compliance           |
+| 文件                    | 用途                       | 加载时机           |
+| ----------------------- | -------------------------- | ------------------ |
+| genre-guide.md          | 13种题材定义 + 出海题材    | 选题立项           |
+| opening-rules.md        | 开篇黄金法则 + 6种开场模板 | 故事方案、分集撰写 |
+| paywall-design.md       | 付费卡点设计策略           | 故事方案、分集目录 |
+| rhythm-curve.md         | 节奏曲线 + 单集微结构      | 故事方案、分集撰写 |
+| satisfaction-matrix.md  | 5大爽点类型矩阵            | 故事方案、分集撰写 |
+| villain-design.md       | 4层反派体系设计            | 角色塑造           |
+| hook-design.md          | 5种钩子类型                | 分集撰写           |
+| compliance-checklist.md | 合规审核清单               | 合规审核           |
 
 **加载方式：** 进入对应阶段时，读取 references/ 目录下的对应文件作为创作指导。
 
 ---
 
-## 命令定义
+## 创作流程（按自然语言推进，无需斜杠命令）
 
-### /drama-start
+### 第一步：选题立项
 
 **功能：** 选题定位，确定创作方向。
 
@@ -86,9 +86,9 @@ description: 微短剧剧本全流程创作。当用户想创作短剧/微短剧
    - **集数规模：** 50-60集（紧凑）/ 60-80集（标准）/ 80-100集（长线）
    - **输出语言：** 中文（国内标准格式）/ English（好莱坞行业标准）
 
-4. 如用户选择 English，自动切换为出海模式（等同 /drama-overseas）
+4. 如用户选择 English，自动切换为出海模式（等同进入「出海模式」）
 
-5. 汇总确认后，保存状态到 `.drama-state.json`，提示进入下一步 `/drama-plan`
+5. 汇总确认后，保存状态到 `.drama-state.json`，提示进入下一步 `故事方案`
 
 **输出格式：**
 
@@ -103,16 +103,16 @@ description: 微短剧剧本全流程创作。当用户想创作短剧/微短剧
 - **输出模式：** {国内/overseas}
 - **输出语言：** {语言}
 
-✅ 方向已锁定！输入 /drama-plan 开始构建故事骨架
+✅ 方向已锁定！回复"继续"进入下一步：构建故事骨架（故事方案）
 ```
 
 ---
 
-### /drama-plan
+### 第二步：故事方案
 
 **功能：** 生成完整的故事骨架和创作策略。
 
-**前置条件：** 已完成 /drama-start
+**前置条件：** 已完成「选题立项」阶段
 
 **加载参考：** opening-rules.md, paywall-design.md, rhythm-curve.md, satisfaction-matrix.md
 
@@ -132,15 +132,15 @@ description: 微短剧剧本全流程创作。当用户想创作短剧/微短剧
 
 **输出：** 保存为 `creative-plan.md`
 
-**结束提示：** `✅ 创作方案已保存！输入 /drama-characters 开始塑造人物`
+**结束提示：** `✅ 创作方案已保存！回复"继续"进入下一步：塑造人物（角色塑造）`
 
 ---
 
-### /drama-characters
+### 第三步：角色塑造
 
 **功能：** 生成完整角色体系。
 
-**前置条件：** 已完成 /drama-plan
+**前置条件：** 已完成「故事方案」阶段
 
 **加载参考：** villain-design.md
 
@@ -182,15 +182,15 @@ graph TD
 
 **输出：** 保存为 `characters.md`
 
-**结束提示：** `✅ 角色档案已保存！输入 /drama-outline 规划全剧分集`
+**结束提示：** `✅ 角色档案已保存！回复"继续"进入下一步：规划全剧分集（分集目录）`
 
 ---
 
-### /drama-outline
+### 第四步：分集目录
 
 **功能：** 生成全剧分集目录。
 
-**前置条件：** 已完成 /drama-characters
+**前置条件：** 已完成「角色塑造」阶段
 
 **加载参考：** paywall-design.md, rhythm-curve.md
 
@@ -210,7 +210,7 @@ graph TD
 
 **要求：**
 
-- 必须覆盖全部集数（与 /drama-start 设定一致）
+- 必须覆盖全部集数（与 选题立项 设定一致）
 - 前 10 集必须包含至少 3 个 🔥 和 2 个 💰
 - 全剧 🔥 集数占比 25-35%
 - 💰 集数占比 10-15%
@@ -220,23 +220,23 @@ graph TD
 
 **重要提示：** 生成目录后，提醒用户务必通读全部目录确认节奏再开始写分集。
 
-**结束提示：** `✅ 分集目录已保存！请先通读目录确认节奏，然后输入 /drama-episode 1 开始写第一集`
+**结束提示：** `✅ 分集目录已保存！请先通读目录确认节奏，然后回复"写第1集"或"继续"开始撰写分集剧本`
 
 ---
 
-### /drama-episode {N}
+### 第五步：分集撰写
 
 **功能：** 生成第 N 集的完整剧本。
 
-**前置条件：** 已完成 /drama-outline
+**前置条件：** 已完成「分集目录」阶段
 
 **加载参考：** opening-rules.md（第1集时重点参考）, rhythm-curve.md, satisfaction-matrix.md, hook-design.md
 
 **支持格式：**
 
-- `/drama-episode 1` — 写第1集
-- `/drama-episode 5-8` — 批量写第5到第8集
-- `/drama-episode next` — 写下一集（自动递增）
+- `分集撰写 1` — 写第1集
+- `分集撰写 5-8` — 批量写第5到第8集
+- `分集撰写 next` — 写下一集（自动递增）
 
 **单集剧本格式（国内模式）：**
 
@@ -335,11 +335,11 @@ CLOSE-UP - {key detail}
 
 **输出：** 保存为 `episodes/ep{NNN}.md`（三位数补零）
 
-**结束提示：** `✅ 第{N}集已保存！输入 /drama-episode {N+1} 继续，或 /drama-review {N} 检查质量`
+**结束提示：** `✅ 第{N}集已保存！回复"写下一集"继续，或说"检查本集质量"进行质量审查`
 
 ---
 
-### /drama-review {N}
+### 第六步：质量审查
 
 **功能：** 对已完成的剧本进行质量检查。
 
@@ -347,9 +347,9 @@ CLOSE-UP - {key detail}
 
 **支持格式：**
 
-- `/drama-review 5` — 检查第5集
-- `/drama-review 1-10` — 批量检查第1到第10集
-- `/drama-review all` — 检查所有已完成集数
+- `质量审查 5` — 检查第5集
+- `质量审查 1-10` — 批量检查第1到第10集
+- `质量审查 all` — 检查所有已完成集数
 
 **检查维度（每项 1-10 分）：**
 
@@ -398,7 +398,7 @@ CLOSE-UP - {key detail}
 
 ---
 
-### /drama-export
+### 第七步：剧本导出
 
 **功能：** 将完成的剧本导出为专业排版的完整文件。
 
@@ -461,7 +461,7 @@ CLOSE-UP - {key detail}
 
 ---
 
-### /drama-overseas
+### 第八步：出海模式
 
 **功能：** 切换为出海模式，针对海外市场创作。
 
@@ -492,7 +492,7 @@ CLOSE-UP - {key detail}
 
 ---
 
-### /drama-compliance
+### 第九步：合规审核
 
 **功能：** 对已完成的剧本进行合规审核。
 

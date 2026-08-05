@@ -13,7 +13,7 @@
 - [功能概览](#功能概览)
 - [安装方式](#安装方式)
 - [快速上手](#快速上手)
-- [命令手册](#命令手册)
+- [功能说明](#功能说明)
 - [工作目录结构](#工作目录结构)
 - [参考知识库](#参考知识库)
 - [质量评分体系](#质量评分体系)
@@ -82,7 +82,7 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ### 验证安装
 
-启动 AI 编程助手后描述一个短剧创作需求（如"帮我写一部霸总甜宠短剧"），技能应自动触发；或直接输入 `/drama-start`，如果出现选题引导界面，说明安装成功。
+启动 AI 编程助手后描述一个短剧创作需求（如"帮我写一部霸总甜宠短剧"），技能应自动触发；或直接输入 `选题立项`，如果出现选题引导界面，说明安装成功。
 
 ---
 
@@ -90,17 +90,19 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 一个典型的短剧创作流程：
 
+用自然语言对话推进，无需斜杠命令。典型流程：
+
 ```
-/drama-start          → 选择题材、受众、调性、集数
-/drama-plan      → 生成完整故事骨架
-/drama-characters      → 设计角色档案和关系图
-/drama-outline          → 生成分集目录（含钩子和标记）
-/drama-episode 1        → 撰写第1集剧本
-/drama-review 1        → 对第1集进行质量审查
-/drama-episode 2-5      → 批量撰写第2-5集
-/drama-review all      → 全集质量审查
-/drama-compliance          → 合规审核
-/drama-export          → 导出完整剧本
+你："帮我写一部霸总甜宠短剧"      → 进入【选题立项】
+你："继续"                       → 生成【故事方案】
+你："继续"                       → 设计【角色塑造】
+你："继续"                       → 生成【分集目录】
+你："写第1集"                    → 进入【分集撰写】
+你："检查第1集"                  → 进行【质量审查】
+你："写第2到5集"                 → 批量【分集撰写】
+你："检查全部"                   → 全集【质量审查】
+你："做合规审核"                 → 生成【合规审核】报告
+你："导出剧本"                   → 完整【剧本导出】
 ```
 
 ### 海外模式
@@ -108,15 +110,15 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 如果目标市场在海外：
 
 ```
-/drama-overseas          → 切换为英文 + 好莱坞格式
-/drama-episode 1        → 按 INT./EXT. 格式撰写
+你："切换出海模式"    → 改用英文 + 好莱坞格式
+你："写第1集"         → 按 INT./EXT. 格式撰写
 ```
 
 ---
 
-## 命令手册
+## 功能说明
 
-### `/drama-start` — 选题立项
+### 选题立项
 
 启动新项目的创作流程，配置基础参数。
 
@@ -132,15 +134,15 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 | 语言 | zh-CN / en-US | 创作语言 |
 | 模式 | domestic / overseas | 国内格式或海外格式 |
 
-**状态追踪：** 配置完成后生成 `.drama-state.json` 文件，后续命令自动读取。
+**状态追踪：** 配置完成后生成 `.drama-state.json` 文件，后续对话自动读取进度。
 
 ---
 
-### `/drama-plan` — 创作方案
+### 故事方案（创作方案）
 
 生成完整的故事骨架，包含8个核心板块。
 
-**前置条件：** 已执行 `/drama-start`
+**前置条件：** 已执行 `选题立项`
 
 **输出文件：** `creative-plan.md`
 
@@ -157,11 +159,11 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/drama-characters` — 角色设计
+### 角色塑造（角色设计）
 
 创建完整的角色档案体系。
 
-**前置条件：** 已执行 `/drama-plan`
+**前置条件：** 已执行 `故事方案`
 
 **输出文件：** `characters.md`
 
@@ -185,11 +187,11 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/drama-outline` — 分集目录
+### 分集目录
 
 生成完整的分集目录表。
 
-**前置条件：** 已执行 `/drama-characters`
+**前置条件：** 已执行 `角色塑造`
 
 **输出文件：** `episode-directory.md`
 
@@ -212,20 +214,20 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/drama-episode {N}` — 分集撰写
+### 分集撰写
 
 撰写具体集数的剧本。
 
-**前置条件：** 已执行 `/drama-outline`
+**前置条件：** 已执行 `分集目录`
 
 **输出文件：** `episodes/ep{NNN}.md`
 
 **参数格式：**
 
 ```
-/drama-episode 1          → 撰写第1集
-/drama-episode 3-5        → 批量撰写第3、4、5集
-/drama-episode next       → 撰写下一集（自动检测进度）
+分集撰写 1          → 撰写第1集
+分集撰写 3-5        → 批量撰写第3、4、5集
+分集撰写 next       → 撰写下一集（自动检测进度）
 ```
 
 **剧本格式（国内 domestic 模式）：**
@@ -258,7 +260,7 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/drama-review {N}` — 质量审查
+### 质量审查
 
 对已撰写的剧集进行五维度质量评分。
 
@@ -269,16 +271,16 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 **参数格式：**
 
 ```
-/drama-review 1          → 审查第1集
-/drama-review 3-5        → 批量审查第3-5集
-/drama-review all        → 审查所有已写集数
+质量审查 1          → 审查第1集
+质量审查 3-5        → 批量审查第3-5集
+质量审查 all        → 审查所有已写集数
 ```
 
 **评分维度：** 见下方[质量评分体系](#质量评分体系)。
 
 ---
 
-### `/drama-export` — 导出剧本
+### 剧本导出
 
 将所有创作内容整合为专业排版的完整剧本。
 
@@ -295,7 +297,7 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/drama-overseas` — 海外模式
+### 出海模式（海外模式）
 
 将创作切换为英文 + 好莱坞标准格式。
 
@@ -317,7 +319,7 @@ cp -r /tmp/sdp/.agents/skills/short-drama-codex .agents/skills/
 
 ---
 
-### `/drama-compliance` — 合规审核
+### 合规审核
 
 对全剧进行合规审查，检测潜在风险。
 
@@ -395,7 +397,7 @@ your-project/
 
 ## 质量评分体系
 
-`/drama-review` 命令使用五维度评分，每个维度 1-10 分，总分 50 分。
+`质量审查` 阶段使用五维度评分，每个维度 1-10 分，总分 50 分。
 
 ### 评分维度
 
@@ -487,22 +489,22 @@ short-drama-codex/            # 技能包根目录（与 frontmatter 的 name �
 整个 `short-drama-codex/` 目录即一个完整的、可整体复制带走的技能包，安装时直接放入 `.agents/skills/` 下即可被发现。
 
 - **零依赖：** 纯 Markdown 规则文件，无需安装额外包
-- **按需加载：** 参考文档按命令触发条件动态加载，不会全部注入上下文
+- **按需加载：** 参考文档按阶段动态加载，不会全部注入上下文
 - **自包含：** 所有知识库与流程定义都打包在目录内，不引用外部资源
 
 ### 参考文档加载机制
 
-| 命令 | 加载的参考文档 |
+| 阶段 | 加载的参考文档 |
 |------|----------------|
-| `/drama-start` | genre-guide.md |
-| `/drama-plan` | genre-guide.md, rhythm-curve.md, paywall-design.md, satisfaction-matrix.md |
-| `/drama-characters` | villain-design.md |
-| `/drama-outline` | rhythm-curve.md, hook-design.md, paywall-design.md |
-| `/drama-episode {N}` | opening-rules.md（第1-3集时）, hook-design.md |
-| `/drama-review {N}` | rhythm-curve.md, hook-design.md, satisfaction-matrix.md |
-| `/drama-compliance` | compliance-checklist.md |
-| `/drama-overseas` | — |
-| `/drama-export` | — |
+| `选题立项` | genre-guide.md |
+| `故事方案` | genre-guide.md, rhythm-curve.md, paywall-design.md, satisfaction-matrix.md |
+| `角色塑造` | villain-design.md |
+| `分集目录` | rhythm-curve.md, hook-design.md, paywall-design.md |
+| `分集撰写 {N}` | opening-rules.md（第1-3集时）, hook-design.md |
+| `质量审查 {N}` | rhythm-curve.md, hook-design.md, satisfaction-matrix.md |
+| `合规审核` | compliance-checklist.md |
+| `出海模式` | — |
+| `剧本导出` | — |
 
 ### 兼容性
 
