@@ -48,16 +48,16 @@ description: 微短剧剧本全流程创作。当用户想创作短剧/微短剧
 
 创作前必须阅读以下参考文档（位于本 Skill 的 references/ 目录）：
 
-| 文件                    | 用途                       | 加载时机        |
-| ----------------------- | -------------------------- | --------------- |
-| genre-guide.md          | 13种题材定义 + 出海题材    | /drama-start          |
+| 文件                    | 用途                       | 加载时机                    |
+| ----------------------- | -------------------------- | --------------------------- |
+| genre-guide.md          | 13种题材定义 + 出海题材    | /drama-start                |
 | opening-rules.md        | 开篇黄金法则 + 6种开场模板 | /drama-plan, /drama-episode |
 | paywall-design.md       | 付费卡点设计策略           | /drama-plan, /drama-outline |
 | rhythm-curve.md         | 节奏曲线 + 单集微结构      | /drama-plan, /drama-episode |
 | satisfaction-matrix.md  | 5大爽点类型矩阵            | /drama-plan, /drama-episode |
-| villain-design.md       | 4层反派体系设计            | /drama-characters     |
-| hook-design.md          | 5种钩子类型                | /drama-episode        |
-| compliance-checklist.md | 合规审核清单               | /drama-compliance     |
+| villain-design.md       | 4层反派体系设计            | /drama-characters           |
+| hook-design.md          | 5种钩子类型                | /drama-episode              |
+| compliance-checklist.md | 合规审核清单               | /drama-compliance           |
 
 **加载方式：** 进入对应阶段时，读取 references/ 目录下的对应文件作为创作指导。
 
