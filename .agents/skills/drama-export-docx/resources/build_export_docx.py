@@ -115,33 +115,61 @@ def add_para(doc, text='', style='Normal', align=None):
 def parse_roles():
     text = CHAR_PATH.read_text(encoding='utf-8')
     matches = list(re.finditer(r'^### (.+)$', text, re.M))
-    fallback = {
-        '第一层：小反派——胡莉': '嚣张、势利、功利、善于甩锅。',
-        '第一层补充炮灰——马小东': '浮夸、逐利、爱抢镜、逃避责任。',
-        '第二层：中反派——方曼': '克制、冷硬、擅长话术、极度自保。',
-        '第三层：大反派——韩兆': '从容、算计、礼貌疏离、利益至上。',
-    }
     roles = []
+    seen = set()
+
+    def find_field(section, kind):
+        if kind == 'outer':
+            pattern = r'^\s*(?:-\s*)?\*\*(外貌特征|外貌与记忆点|外貌|外形|形象)：\*\*\s*(.+)$'
+        else:
+            pattern = r'^\s*(?:-\s*)?\*\*(性格描述|性格关键词|性格|人物性格)：\*\*\s*(.+)$'
+        match = re.search(pattern, section, re.M)
+        return match.group(2).strip() if match else ''
+
     for index, match in enumerate(matches):
         heading = match.group(1).strip()
-        if any(heading.startswith(x) for x in ('角色弧线', '感情线', '金毛养娃线', '隐藏反派')):
-            continue
-        if not heading.startswith(('1.', '2.', '3.', '4.', '5.', '6.', '7.', '第一层', '第二层', '第三层')):
-            continue
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         section = text[match.end():end]
-        parts = [p.strip() for p in heading.split('｜')]
-        name = re.sub(r'^[1-7]\.\s*', '', parts[0])
-        identity = parts[1] if len(parts) > 1 else '重要角色'
-        outer_match = re.search(r'^- \*\*(外貌特征|外貌与记忆点)：\*\*\s*(.+)$', section, re.M)
-        personality_match = re.search(r'^- \*\*性格关键词：\*\*\s*(.+)$', section, re.M)
-        outer = outer_match.group(2).strip() if outer_match else '档案以其公开身份和行动表现为主要外貌呈现。'
-        personality = personality_match.group(1).strip() if personality_match else next(
-            (value for key, value in fallback.items() if heading.startswith(key)),
-            '通过行为、选择和语言特征逐步呈现。',
-        )
+        name = identity = ''
+        if '｜' in heading:
+            parts = [part.strip() for part in heading.split('｜')]
+            name = re.sub(r'^[1-9]\d*\.\s*', '', parts[0])
+            identity = parts[1] if len(parts) > 1 else '重要角色'
+        elif re.match(r'^.+?[（(].+?[）)]$', heading):
+            parsed = re.match(r'^(.+?)[（(](.+?)[）)]$', heading)
+            name = parsed.group(1).strip()
+            identity = parsed.group(2).strip()
+        elif '——' in heading:
+            layer, name = heading.split('——', 1)
+            name = name.strip()
+            identity = re.sub(r'^[一二三]层(?:补充)?[：:]?\s*', '', layer).strip() or '重要角色'
+        elif re.match(r'^[1-9]\d*\.\s*', heading):
+            name = re.sub(r'^[1-9]\d*\.\s*', '', heading).strip()
+            identity = '重要角色'
+        if not name:
+            continue
+        if name in seen:
+            continue
+        seen.add(name)
+        outer = find_field(section, 'outer') or '档案以其公开身份和行动表现为主要外貌呈现。'
+        personality = find_field(section, 'personality') or '通过行为、选择和语言特征逐步呈现。'
         roles.append((name, identity, outer, personality))
     return roles
+
+
+def card_lines(state):
+    paywall = state.get('paywallEpisodes') or state.get('paywall') or []
+    labels = ['一卡（前段）', '二卡（中段）', '三卡（终段）']
+    groups = []
+    if paywall:
+        third = max(1, (len(paywall) + 2) // 3)
+        groups = [paywall[i:i + third] for i in range(0, len(paywall), third)]
+    while len(groups) < 3:
+        groups.append([])
+    return [
+        f'{label}：' + ('、'.join(f'第{n}集' for n in group) if group else '待定')
+        for label, group in zip(labels, groups)
+    ]
 
 
 def episode_files():
@@ -260,18 +288,31 @@ def extract_brief(state):
 
 
 def build_markdown(state, roles, files, brief):
-    title = state['dramaTitle']
+    title = state.get('dramaTitle') or '未命名短剧'
+    total = int(state.get('totalEpisodes') or len(files) or 0)
     completed = [int(path.stem[-3:]) for path in files]
+    genres = state.get('genre') or []
+    if isinstance(genres, str):
+        genres = [part.strip() for part in re.split(r'[+、,，]', genres) if part.strip()]
+    genre_label = ' + '.join(genres) if genres else '未分类'
+    mode = state.get('mode') or ''
+    if mode == 'domestic':
+        mode_label = '国内标准格式'
+    elif mode == 'hollywood':
+        mode_label = '好莱坞行业标准格式'
+    elif mode:
+        mode_label = str(mode)
+    else:
+        mode_label = '未指定'
     lines = [
         f'# {title}', '',
-        f'> 题材：萌宠 + 喜剧｜输出模式：中文国内标准格式｜创作日期：{date.today().isoformat()}',
-        f'> 当前进度：已完成 {len(completed)}/{state["totalEpisodes"]} 集｜阶段导出，未完成集数以占位标记保留。', '',
+        f'> 题材：{genre_label}｜输出模式：{mode_label}｜创作日期：{date.today().isoformat()}',
+        f'> 当前进度：已完成 {len(completed)}/{total} 集｜阶段导出，未完成集数以占位标记保留。', '',
         '## 卡点', '',
-        '一卡（前段）：第5集、第10集', '',
-        '二卡（中段）：第18集、第28集、第38集、第48集', '',
-        '三卡（终段）：第57集、第64集、第69集', '',
-        '## 角色', '',
     ]
+    for line in card_lines(state):
+        lines += [line, '']
+    lines += ['## 角色', '']
     for name, identity, outer, personality in roles:
         lines += [f'### {name}（{identity}）', '', f'**外貌：** {outer}', '', f'**性格：** {personality}', '']
     if brief:
@@ -280,7 +321,7 @@ def build_markdown(state, roles, files, brief):
     for path in files:
         title_line, body = episode_title_and_body(path)
         lines += [f'### {title_line}', '', body, '']
-    for number in range(1, state['totalEpisodes'] + 1):
+    for number in range(1, total + 1):
         if number not in completed:
             lines += [f'### 第{number}集：（待撰写）', '', '本集剧本待撰写。', '']
     return '\n'.join(lines).rstrip() + '\n'
@@ -358,8 +399,8 @@ def chinese_number(number):
 
 
 def build_docx(state, roles, files, brief):
-    title = state['dramaTitle']
-    total = state['totalEpisodes']
+    title = state.get('dramaTitle') or '未命名短剧'
+    total = int(state.get('totalEpisodes') or len(files) or 0)
     completed = {int(path.stem[-3:]) for path in files}
     doc = Document()
     section = doc.sections[0]
@@ -374,9 +415,8 @@ def build_docx(state, roles, files, brief):
     add = lambda text='': set_reference_paragraph(doc.add_paragraph(), text)
     add(f'《{title}》')
     add('卡点：')
-    add('一卡：第5集、第10集')
-    add('二卡：第18集、第28集、第38集、第48集')
-    add('三卡：第57集、第64集、第69集')
+    for line in card_lines(state):
+        add(line)
     add()
 
     for name, identity, outer, personality in roles:
@@ -418,12 +458,13 @@ def main():
         raise FileNotFoundError(f'未找到分集剧本目录或文件：{EPISODES}')
     EXPORT.mkdir(exist_ok=True)
     state = json.loads(STATE_PATH.read_text(encoding='utf-8'))
+    title = state.get('dramaTitle') or '未命名短剧'
     roles = parse_roles()
     files = episode_files()
     brief = extract_brief(state)
     brief_count = validate_brief(brief) if brief else 0
     markdown = build_markdown(state, roles, files, brief)
-    md_path = EXPORT / f'{state["dramaTitle"]}-完整剧本.md'
+    md_path = EXPORT / f'{title}-完整剧本.md'
     md_path.write_text(markdown, encoding='utf-8')
     docx_path = build_docx(state, roles, files, brief)
     print(md_path)
